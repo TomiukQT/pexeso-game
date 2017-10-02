@@ -6,20 +6,21 @@ public class GameMaker : MonoBehaviour {
 
     public GameObject card;
     public List<GameObject> cards = new List<GameObject>();
-    public List<Material> materials = new List<Material>();
-
+    public List<Material> _materials = new List<Material>();
+    //[SerializeField]private Material[] _materialsArray;
     //gameplay
     private int random;
-
+    int lenghtMat = 0;
     //graphics
     public float offset = 0.1f;
 
 	
 	void Start ()
     {
+        GenerateMaterialList();
         GenerateCardField();
-        GenerateCards();        
-	}
+        GenerateCards();
+    }
 	
 	
 	void Update ()
@@ -27,8 +28,23 @@ public class GameMaker : MonoBehaviour {
 		
 	}
 
-   
 
+    private void GenerateMaterialList()
+    {
+        //    _materialsArray = new Material[32];
+
+        //    _materialsArray = Resources.LoadAll<Material>("Materials");
+        //foreach (Material mat in _materialsArray)
+        //{
+        //    //_materials.Add(mat);
+        //}
+        lenghtMat = _materials.Count;
+        for (int i = 0; i < lenghtMat ; i++)
+        {
+            _materials.Add(_materials[i]);
+        }
+
+    }
 
     private void GenerateCardField()
     {
@@ -46,13 +62,20 @@ public class GameMaker : MonoBehaviour {
 
     }
     private void GenerateCards()
-    {       
-            for (int i = 0; i < 64; i++)
-            {
-                random = Random.Range(0, cards.Count+1);
-                cards[random].GetComponent<Card>().id = i;
-                
-            }
+    {
+        for (int i = 0; i <= 64; i ++)
+        {
+            int randomCard = Random.Range(0, cards.Count );
+            int randomMaterial = Random.Range(0, _materials.Count);
+            GameObject card = cards[randomCard];
+            Material mat = _materials[randomMaterial];
+
+            Transform fore = card.transform.Find("Fore");
+            fore.GetComponent<Renderer>().material = mat;
+
+            cards.RemoveAt(randomCard);
+            _materials.RemoveAt(randomMaterial);
+        }
         
     }
 
